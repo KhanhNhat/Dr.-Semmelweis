@@ -26,12 +26,24 @@ ggplot(monthly, aes(x = date, y = proportion_deaths, col = handwashing_started))
   geom_line() + labs(x ='Date', y = 'Proportion of death: Before and After handwashing')
 
 #Task 7: Explore... continue
-summary = monthly %>%
+summary_monthly = monthly %>%
   group_by(handwashing_started) %>%
   summarise(mean(proportion_deaths))
 
-summary
+summary_monthly
 
 #Task 8: Statistic analysis T-Test with montly dataset
 test_result = t.test(proportion_deaths ~ handwashing_started, data = monthly)
 test_result
+
+#Task 9: Find linear regression model that death is a function of birth
+model_lm = lm(deaths ~ births, data = yearly)
+summary(model_lm)
+
+#Draw residuals between real value of death and regression model line
+ggplot(yearly, aes(x = births, y = deaths)) +
+  geom_point() +
+  geom_smooth(method = 'lm', se = FALSE) + 
+  geom_segment(aes(xend = births, yend = fitted.values(model_lm)), 
+               arrow = arrow(length = unit(0.25, 'cm')), col = 'grey')
+
